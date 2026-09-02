@@ -2,6 +2,21 @@
 
 A deterministic, evidence-centered architecture for ordered execution, cryptographic auditability, reproducible verification, performance governance, and bounded defect routing.
 
+
+## N.B.C. applied-intelligence distinction
+
+Under the interpretive framing of Nicholas B. Carty (N.B.C.), **artificial intelligence** remains the established name of the technology, while **applied intelligence** describes how the technology computationally applies recorded human knowledge—including language, counting, grammar, logic, rhetoric, meaning, and symbols.
+
+**Book knowledge** is preserved human knowledge; receiving or reproducing it is not the same as understanding it. Human intelligence remains responsible for questioning, verification, judgment, purpose, and creation. In education, a child may produce a better finished output without a corresponding advance in independent thinking when an AI system performs the full reasoning process. This is a bounded risk statement, not a claim that every use of AI harms learning.
+
+```text
+CAPABILITY != AUTHORITY
+GENERATED LANGUAGE != UNDERSTANDING
+ANSWER PRODUCTION != LEARNING
+BOOK KNOWLEDGE != LIVED UNDERSTANDING
+ASSISTANCE != HUMAN JUDGMENT
+```
+
 ## Status and evidence boundary
 
 This repository preserves the current architecture and evolutionary-stage record. Statements below describe the reported design and development milestones supplied for this package. A README is not, by itself, proof of production deployment, independent security validation, benchmark reproducibility, secret provisioning, or an active Linear integration. Those claims become repository-verified only when the corresponding source, tests, workflows, artifacts, and successful run evidence are committed and reviewable here.

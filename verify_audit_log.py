@@ -1,8 +1,9 @@
 import base64
 import binascii
+import hashlib
 import json
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List
 
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes, serialization
@@ -14,8 +15,30 @@ from signed_audit_suite import canonical_json_bytes, compute_canonical_hash
 
 SCHEMA_VERSION = "1.0.0"
 TEST_SCOPE = "3_order_local_fixture"
+BUNDLE_TYPE = "applied_evidence_bundle"
 EXPECTED_ITEM_COUNT = 3
 EXPECTED_HISTORY = ["scheduled", "dispatched", "in_progress", "completed"]
+STANDARD_KEYS = {"report", "container_signatures"}
+MERKLE_KEYS = {
+    "schema_version",
+    "test_scope",
+    "batch_metadata",
+    "envelopes",
+}
+BUNDLE_KEYS = {
+    "schema_version",
+    "test_scope",
+    "bundle_type",
+    "standard_audit",
+    "merkle_audit",
+    "parity_manifest",
+}
+PARITY_KEYS = {
+    "total_items",
+    "payload_hashes_sha256",
+    "standard_component_sha256",
+    "merkle_component_sha256",
+}
 
 
 def load_public_key_from_pem(pem_str: str) -> rsa.RSAPublicKey:
@@ -76,22 +99,47 @@ def _valid_payload(payload: Any) -> bool:
     return True
 
 
-def _unique_order_ids(envelopes: list[Dict[str, Any]]) -> bool:
+def _unique_order_ids(envelopes: List[Dict[str, Any]]) -> bool:
     try:
-        order_ids = [env["payload"]["order_id"] for env in envelopes]
+        order_ids = [envelope["payload"]["order_id"] for envelope in envelopes]
     except (KeyError, TypeError):
         return False
     return len(order_ids) == len(set(order_ids))
 
 
+def _component_hash(component: Dict[str, Any]) -> str:
+    return hashlib.sha256(canonical_json_bytes(component)).hexdigest()
+
+
+def _standard_payloads(standard: Dict[str, Any]) -> List[Dict[str, Any]]:
+    return [
+        envelope["payload"]
+        for envelope in standard["report"]["execution_envelopes"]
+    ]
+
+
+def _merkle_payloads(merkle: Dict[str, Any]) -> List[Dict[str, Any]]:
+    return [envelope["payload"] for envelope in merkle["envelopes"]]
+
+
+def build_parity_manifest(
+    standard: Dict[str, Any], merkle: Dict[str, Any]
+) -> Dict[str, Any]:
+    payloads = _standard_payloads(standard)
+    return {
+        "total_items": len(payloads),
+        "payload_hashes_sha256": [
+            hashlib.sha256(canonical_json_bytes(payload)).hexdigest()
+            for payload in payloads
+        ],
+        "standard_component_sha256": _component_hash(standard),
+        "merkle_component_sha256": _component_hash(merkle),
+    }
+
+
 def verify_merkle_batch_audit(audit_package: Dict[str, Any]) -> bool:
     try:
-        if set(audit_package) != {
-            "schema_version",
-            "test_scope",
-            "batch_metadata",
-            "envelopes",
-        }:
+        if set(audit_package) != MERKLE_KEYS:
             return False
         if audit_package["schema_version"] != SCHEMA_VERSION:
             return False
@@ -115,18 +163,21 @@ def verify_merkle_batch_audit(audit_package: Dict[str, Any]) -> bool:
             return False
         if not _unique_order_ids(envelopes):
             return False
-        if [env.get("leaf_index") for env in envelopes] != list(
+        if [envelope.get("leaf_index") for envelope in envelopes] != list(
             range(metadata["total_items"])
         ):
             return False
 
         merkle_root = metadata["merkle_root"]
-        if not isinstance(merkle_root, str) or len(bytes.fromhex(merkle_root)) != 32:
+        if not isinstance(merkle_root, str):
+            return False
+        root_bytes = bytes.fromhex(merkle_root)
+        if len(root_bytes) != 32:
             return False
         public_key = load_public_key_from_pem(metadata["public_key_pem"])
         if not verify_rsa_signature(
             public_key,
-            bytes.fromhex(merkle_root),
+            root_bytes,
             metadata["batch_rsa_pss_signature"],
         ):
             return False
@@ -162,7 +213,7 @@ def verify_merkle_batch_audit(audit_package: Dict[str, Any]) -> bool:
 
 def verify_standard_envelope_audit(audit_package: Dict[str, Any]) -> bool:
     try:
-        if set(audit_package) != {"report", "container_signatures"}:
+        if set(audit_package) != STANDARD_KEYS:
             return False
         report = audit_package["report"]
         container_signatures = audit_package["container_signatures"]
@@ -226,24 +277,70 @@ def verify_standard_envelope_audit(audit_package: Dict[str, Any]) -> bool:
         return False
 
 
+def verify_unified_bundle(bundle: Dict[str, Any]) -> bool:
+    try:
+        if set(bundle) != BUNDLE_KEYS:
+            return False
+        if bundle["schema_version"] != SCHEMA_VERSION:
+            return False
+        if bundle["test_scope"] != TEST_SCOPE:
+            return False
+        if bundle["bundle_type"] != BUNDLE_TYPE:
+            return False
+
+        standard = bundle["standard_audit"]
+        merkle = bundle["merkle_audit"]
+        manifest = bundle["parity_manifest"]
+        if not isinstance(standard, dict) or not isinstance(merkle, dict):
+            return False
+        if not isinstance(manifest, dict) or set(manifest) != PARITY_KEYS:
+            return False
+        if not verify_standard_envelope_audit(standard):
+            return False
+        if not verify_merkle_batch_audit(merkle):
+            return False
+
+        standard_payloads = _standard_payloads(standard)
+        merkle_payloads = _merkle_payloads(merkle)
+        if standard_payloads != merkle_payloads:
+            return False
+        if len(standard_payloads) != EXPECTED_ITEM_COUNT:
+            return False
+        if (
+            standard["report"]["public_key_pem"]
+            != merkle["batch_metadata"]["public_key_pem"]
+        ):
+            return False
+        if manifest != build_parity_manifest(standard, merkle):
+            return False
+        return True
+    except (
+        KeyError,
+        TypeError,
+        ValueError,
+        UnicodeError,
+        binascii.Error,
+    ):
+        return False
+
+
+def verify_audit_package(audit_package: Dict[str, Any]) -> bool:
+    if not isinstance(audit_package, dict):
+        return False
+    keys = set(audit_package)
+    if keys == BUNDLE_KEYS:
+        return verify_unified_bundle(audit_package)
+    if keys == STANDARD_KEYS:
+        return verify_standard_envelope_audit(audit_package)
+    if keys == MERKLE_KEYS:
+        return verify_merkle_batch_audit(audit_package)
+    return False
+
+
 def verify_audit_file(file_path: str) -> bool:
     try:
         with Path(file_path).open("r", encoding="utf-8") as file_handle:
             audit_package = json.load(file_handle)
     except (OSError, UnicodeError, json.JSONDecodeError):
         return False
-    if not isinstance(audit_package, dict):
-        return False
-
-    is_standard = set(audit_package) == {"report", "container_signatures"}
-    is_merkle = set(audit_package) == {
-        "schema_version",
-        "test_scope",
-        "batch_metadata",
-        "envelopes",
-    }
-    if is_standard == is_merkle:
-        return False
-    if is_standard:
-        return verify_standard_envelope_audit(audit_package)
-    return verify_merkle_batch_audit(audit_package)
+    return verify_audit_package(audit_package)

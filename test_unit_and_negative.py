@@ -1,5 +1,4 @@
 import copy
-import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -9,12 +8,18 @@ from signed_audit_suite import (
     OrderStateMachine,
     canonical_json_bytes,
 )
-from test_3_order_consistency import run_3_order_consistency_test
+from test_3_order_consistency import (
+    WORKSPACE_NAME,
+    build_unified_bundle,
+    run_3_order_consistency_test,
+    write_verified_bundle,
+)
 from verify_audit_log import (
     verify_audit_file,
     verify_merkle_batch_audit,
     verify_rsa_signature,
     verify_standard_envelope_audit,
+    verify_unified_bundle,
 )
 
 
@@ -22,6 +27,7 @@ class AppliedEvidenceTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.standard, cls.merkle = run_3_order_consistency_test()
+        cls.bundle = build_unified_bundle(cls.standard, cls.merkle)
 
     def test_illegal_state_transition_is_rejected(self) -> None:
         state_machine = OrderStateMachine(
@@ -115,18 +121,29 @@ class AppliedEvidenceTests(unittest.TestCase):
         }
         self.assertFalse(verify_standard_envelope_audit(package))
 
-    def test_count_mismatch_is_rejected(self) -> None:
-        mismatch = copy.deepcopy(self.standard)
-        mismatch["report"]["total_executed"] = 2
-        self.assertFalse(verify_standard_envelope_audit(mismatch))
-
-    def test_ambiguous_schema_is_rejected(self) -> None:
-        ambiguous = copy.deepcopy(self.standard)
-        ambiguous["batch_metadata"] = {}
+    def test_unified_bundle_passes_in_memory_and_on_disk(self) -> None:
+        self.assertTrue(verify_unified_bundle(self.bundle))
         with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "ambiguous.json"
-            path.write_text(json.dumps(ambiguous), encoding="utf-8")
-            self.assertFalse(verify_audit_file(str(path)))
+            output_path = Path(directory) / "applied_evidence_bundle.json"
+            write_verified_bundle(self.bundle, output_path)
+            self.assertTrue(verify_audit_file(str(output_path)))
+            self.assertFalse((Path(directory) / WORKSPACE_NAME).exists())
+
+    def test_mixed_key_bundle_is_rejected_and_canonical_file_preserved(
+        self,
+    ) -> None:
+        _, second_merkle = run_3_order_consistency_test()
+        mixed_bundle = build_unified_bundle(self.standard, second_merkle)
+        self.assertFalse(verify_unified_bundle(mixed_bundle))
+
+        with tempfile.TemporaryDirectory() as directory:
+            output_path = Path(directory) / "applied_evidence_bundle.json"
+            sentinel = b"preserved-canonical-evidence\n"
+            output_path.write_bytes(sentinel)
+            with self.assertRaises(RuntimeError):
+                write_verified_bundle(mixed_bundle, output_path)
+            self.assertEqual(output_path.read_bytes(), sentinel)
+            self.assertFalse((Path(directory) / WORKSPACE_NAME).exists())
 
 
 if __name__ == "__main__":

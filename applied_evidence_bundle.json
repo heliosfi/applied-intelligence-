@@ -1,0 +1,205 @@
+{
+  "schema_version": "1.0.0",
+  "test_scope": "3_order_local_fixture",
+  "bundle_type": "applied_evidence_bundle",
+  "standard_audit": {
+    "report": {
+      "schema_version": "1.0.0",
+      "test_scope": "3_order_local_fixture",
+      "total_executed": 3,
+      "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoxBsrD1jPU2oYMCKogZn\nCk2aTpspotQToELuy+kkXTh4K7bG/kn4tQSCXc6Iw412hBVP8S/hc1ytREbu2NnZ\nCERo5CKXP1Uj96VfGBgKjzxuDR/rR9AidAw30RjpM2mLy7BInjYysVDQnMOHFquu\nXQVmDuGZ81UmOdDyZ1A+me+sS3ziGb2fH4eK11fJIYjqs6CWhNyJOKjSjqYksaZK\ny2u+K14QJYkwb7cJUZBl7AiitZHT7WsjTgy8Lx3e5GytawIIBnxeiSQjqrjDQlA+\npvRtFpYMo3mKjmfbpd2bn4XtuqLY8p4lBsPbqAU3sKubdNLrPS6hNe5WvDKjophs\nOwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "execution_envelopes": [
+        {
+          "payload": {
+            "order_id": "ORD-001",
+            "test_scope": "3_order_local_fixture",
+            "lifecycle": {
+              "order_id": "ORD-001",
+              "symbol": "HELIOS-USD",
+              "quantity": "100",
+              "price": "150.00",
+              "final_state": "completed",
+              "state_history": [
+                "scheduled",
+                "dispatched",
+                "in_progress",
+                "completed"
+              ]
+            },
+            "canonical_hash": "7b918a53be5f2595ee24a86c625f4a2ae80bec1a71eb662ed39aa40cf37a8c7e"
+          },
+          "signatures": {
+            "rsa_pss_sha256": "MSXKSZT9GL8MTg//UEQCrFZHHQ4XYp2x7Vxd8j3T3sB0/KB503G9kDgk3ltaFYvjV9S0neFTjmc9Q/hOcZHeU4ByoiKvuQHEco+FJQAuV0XA4kSYVAMS2TaFyh2TCxNCEFSfEQdX/5CaV6pPsQ8ZNYDuTaY3xBzP5f6Gq+5m3zw/jYDn2StbU9JPFZLwv7XcBJK/wn2CkH7jJL79AQF4UAtEB5LIzqjiTSizvWe/Ap6R4U/18U2VBszX4HouPq3iceF4oqga5v1HzRV+BjcZYbN5y5IF8xF1A/ULbKyuTxA+Qsa1+JmTDncDJVSu6FIpSY419tK1HKPxb5s4X5ZKIg=="
+          }
+        },
+        {
+          "payload": {
+            "order_id": "ORD-002",
+            "test_scope": "3_order_local_fixture",
+            "lifecycle": {
+              "order_id": "ORD-002",
+              "symbol": "SELENE-ETH",
+              "quantity": "10",
+              "price": "2800.00",
+              "final_state": "completed",
+              "state_history": [
+                "scheduled",
+                "dispatched",
+                "in_progress",
+                "completed"
+              ]
+            },
+            "canonical_hash": "76e832645795782649c38047439d9fa442f7c27f2f9ed01b5bacb7f5e04dfa23"
+          },
+          "signatures": {
+            "rsa_pss_sha256": "Tkc+FyWSkwxEbLQ17XBXq1+wcwYBlJCbgJ0DMhGcDWnlxfjnMOIkVcFjqItD8zoR/n/Z8GJfPqmniEIf1WWVcWOOqNQzFhW2SEV5c+B+8bRBQjNNRGPp2Xc0tHJoCYfXRA0DkrcR/OV7jGP+ET55dw7mdDPTiiWO9zqGO1J/AE9fOYcKP/MvJJ+fRINUURgGEG8WE9Z4UiXJgwUASLHwHd4Yt801MN/6R14eJ4MvmU104aNXg+qZ6GimJ6B1SFeIm2qXk/SE7TEjSHrm7pxWVwdlLts+Ryio7xcFptKFOJ7AB2h/Q9MvUYMcaC0tqyQOQhpIuDwV0ppEwXWJMogP/Q=="
+          }
+        },
+        {
+          "payload": {
+            "order_id": "ORD-003",
+            "test_scope": "3_order_local_fixture",
+            "lifecycle": {
+              "order_id": "ORD-003",
+              "symbol": "AETHER-BTC",
+              "quantity": "1",
+              "price": "65000.00",
+              "final_state": "completed",
+              "state_history": [
+                "scheduled",
+                "dispatched",
+                "in_progress",
+                "completed"
+              ]
+            },
+            "canonical_hash": "89a29b0b960b8be7cc9464bfbff3befd7c5b59ca9a5af2effd7081be16f8758b"
+          },
+          "signatures": {
+            "rsa_pss_sha256": "d3AWccg+eh15TMao/NzMWDyJKyd8AnjW+5L9la4UgOudIn9ESAjuysw3lRlKYMJSZIxfXRH+yFO071jFPJZHG8OvWYLwoYz50xaksL0L6zeiY1+DnnWNqNCi6wOXg4aRkZgshiTlO10wigkfWQt1ABgafzeb/IrJhqyw5KMdOMS6x28NW8FrPUJXEK16SvADUKgjhi93SeDEu0rzfN1OtT0cNRH0W9VMCqA9X6gghyyghhzHCd1blbeYuAHKfwpolDiZhWGCvUC1vKqBvKAsy79ojH/Ns7lH8X6auwU7IIAYvJMCq2tXCB3kAYB7kx1amGhsXWUN+6UdiBx2WkNeAg=="
+          }
+        }
+      ]
+    },
+    "container_signatures": {
+      "rsa_pss_sha256": "eHFSl8yRCCxd2jOa/8YijeN1LXJcDSkkE60QqflK88+IITK4Iigo/Sct1VIKMVsEDE5ebWCnznYgPVVEi8nAPR4UDBOLIn3fgVIT0RYlwOGpDv9fnMsxSLxcSYBA/8aD1SUx5b6egl0aMvZqRWcAwtkEhow+Etoh9GAcvLVP0w6INapgy97GiG4TTRwhNCt/OBYQIp45ghCHPPBIqGmhx8nDupof3O4jsxGO5F/sexJ7QmUDsfvvG+UjylKFf481Z5n+5NVV8COORj5XNFnSr4Zkt/U3YBKCoffxzIvUeOUoXr5LBCPTUFjBNvBCmer7uZn+1/eTr+TBPc9yuYHiBA=="
+    }
+  },
+  "merkle_audit": {
+    "schema_version": "1.0.0",
+    "test_scope": "3_order_local_fixture",
+    "batch_metadata": {
+      "total_items": 3,
+      "merkle_root": "27c88095e344621b8709a083fc3a3e97b7f3b81f3338fbaca087ba8e434eb02c",
+      "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoxBsrD1jPU2oYMCKogZn\nCk2aTpspotQToELuy+kkXTh4K7bG/kn4tQSCXc6Iw412hBVP8S/hc1ytREbu2NnZ\nCERo5CKXP1Uj96VfGBgKjzxuDR/rR9AidAw30RjpM2mLy7BInjYysVDQnMOHFquu\nXQVmDuGZ81UmOdDyZ1A+me+sS3ziGb2fH4eK11fJIYjqs6CWhNyJOKjSjqYksaZK\ny2u+K14QJYkwb7cJUZBl7AiitZHT7WsjTgy8Lx3e5GytawIIBnxeiSQjqrjDQlA+\npvRtFpYMo3mKjmfbpd2bn4XtuqLY8p4lBsPbqAU3sKubdNLrPS6hNe5WvDKjophs\nOwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "batch_rsa_pss_signature": "hoebzceg2lZb3UAQ2nv47sbfQjySGMhVX80Wi8rpK6vFV9srQT9FGa9AiIQXmzjjSRm1mWvwcibQnDE3uXJy2TsC0dKU7kYRDZNpZ4Mx9oEAP8KdE4QzxI+Uz0T2t59Mg4ATOyH7YP/tiwNC4HuM5VlfcDTTcdw30GRJ5K3WJH+3a3Jc1eGPDxT5fZbV/lJyxi31OOoG/Z3SlbpGjXyPm/loRiQRw3GMjKufvQbf/MfwxWSF0N1PVr95uWJ3ZK+KQ9ruPnUbGnerd1USgrEmd9AZyc3ayegEplPcd0YkUY+woWZBHm6FCl565nO6kvhaG2pcGMZ7MV9tlwLgF55CIw=="
+    },
+    "envelopes": [
+      {
+        "leaf_index": 0,
+        "payload": {
+          "order_id": "ORD-001",
+          "test_scope": "3_order_local_fixture",
+          "lifecycle": {
+            "order_id": "ORD-001",
+            "symbol": "HELIOS-USD",
+            "quantity": "100",
+            "price": "150.00",
+            "final_state": "completed",
+            "state_history": [
+              "scheduled",
+              "dispatched",
+              "in_progress",
+              "completed"
+            ]
+          },
+          "canonical_hash": "7b918a53be5f2595ee24a86c625f4a2ae80bec1a71eb662ed39aa40cf37a8c7e"
+        },
+        "leaf_hash": "511c089f14c1f51f548ba881ea98f234562a6ad642c8a13f5c07fa6995a4eb49",
+        "merkle_proof": [
+          {
+            "position": "right",
+            "hash": "3ff8c9680271def9d81b7d663093dbcc798a69995ae0c913ba0ea96da4cd3697"
+          },
+          {
+            "position": "right",
+            "hash": "5314f5aa14140b50f46c7cedd86269b96da66ac5385f0df44407c032dfdd9ae4"
+          }
+        ]
+      },
+      {
+        "leaf_index": 1,
+        "payload": {
+          "order_id": "ORD-002",
+          "test_scope": "3_order_local_fixture",
+          "lifecycle": {
+            "order_id": "ORD-002",
+            "symbol": "SELENE-ETH",
+            "quantity": "10",
+            "price": "2800.00",
+            "final_state": "completed",
+            "state_history": [
+              "scheduled",
+              "dispatched",
+              "in_progress",
+              "completed"
+            ]
+          },
+          "canonical_hash": "76e832645795782649c38047439d9fa442f7c27f2f9ed01b5bacb7f5e04dfa23"
+        },
+        "leaf_hash": "3ff8c9680271def9d81b7d663093dbcc798a69995ae0c913ba0ea96da4cd3697",
+        "merkle_proof": [
+          {
+            "position": "left",
+            "hash": "511c089f14c1f51f548ba881ea98f234562a6ad642c8a13f5c07fa6995a4eb49"
+          },
+          {
+            "position": "right",
+            "hash": "5314f5aa14140b50f46c7cedd86269b96da66ac5385f0df44407c032dfdd9ae4"
+          }
+        ]
+      },
+      {
+        "leaf_index": 2,
+        "payload": {
+          "order_id": "ORD-003",
+          "test_scope": "3_order_local_fixture",
+          "lifecycle": {
+            "order_id": "ORD-003",
+            "symbol": "AETHER-BTC",
+            "quantity": "1",
+            "price": "65000.00",
+            "final_state": "completed",
+            "state_history": [
+              "scheduled",
+              "dispatched",
+              "in_progress",
+              "completed"
+            ]
+          },
+          "canonical_hash": "89a29b0b960b8be7cc9464bfbff3befd7c5b59ca9a5af2effd7081be16f8758b"
+        },
+        "leaf_hash": "d1faafd6fa47fe0c8915e23fbe0d85ab31525a3d84b02e1f46d43a21b74ed809",
+        "merkle_proof": [
+          {
+            "position": "right",
+            "hash": "d1faafd6fa47fe0c8915e23fbe0d85ab31525a3d84b02e1f46d43a21b74ed809"
+          },
+          {
+            "position": "left",
+            "hash": "a18511b179242f7e3713046f1731e01adb76d9fd2e2457c5d10788c89f07383b"
+          }
+        ]
+      }
+    ]
+  },
+  "parity_manifest": {
+    "total_items": 3,
+    "payload_hashes_sha256": [
+      "ddbf7076663d5596e9489a76f344ecf90aa64292859f0a6de01f82798d525795",
+      "39bb4fe176964be0810e77a8c417366278e14172033967905a2ff819f9d679e2",
+      "82c162262627ef61d012ba5d71ae38c8451fa648b391073a4d99361c9f4db5cb"
+    ],
+    "standard_component_sha256": "fccf2f8899750c5413f1540a25a391140424024aefce66ba9c3f4c3cb3cbe0e4",
+    "merkle_component_sha256": "c878b390eb866b22bbd88b7972d2eff698262372ae6215c4b61b35938b5d96ee"
+  }
+}

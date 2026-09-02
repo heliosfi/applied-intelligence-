@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
@@ -11,54 +12,19 @@ from signed_audit_suite import (
     compute_canonical_hash,
 )
 from verify_audit_log import (
+    BUNDLE_TYPE,
+    SCHEMA_VERSION,
+    TEST_SCOPE,
+    build_parity_manifest,
+    verify_audit_file,
     verify_merkle_batch_audit,
     verify_standard_envelope_audit,
+    verify_unified_bundle,
 )
 
 
-ARTIFACT_PATHS = (
-    Path("order_execution_audit.json"),
-    Path("merkle_batch_audit.json"),
-)
-
-
-def purge_stale_artifacts() -> None:
-    """Remove only the bounded evidence outputs and their temporary files."""
-    for path in ARTIFACT_PATHS:
-        path.unlink(missing_ok=True)
-        path.with_suffix(path.suffix + ".tmp").unlink(missing_ok=True)
-
-
-def _write_json_temp(path: Path, data: Dict[str, Any]) -> Path:
-    temp_path = path.with_suffix(path.suffix + ".tmp")
-    with temp_path.open("w", encoding="utf-8", newline="\n") as file_handle:
-        json.dump(
-            data,
-            file_handle,
-            indent=2,
-            ensure_ascii=False,
-            allow_nan=False,
-        )
-        file_handle.write("\n")
-        file_handle.flush()
-        os.fsync(file_handle.fileno())
-    return temp_path
-
-
-def write_evidence_pair(
-    standard_package: Dict[str, Any],
-    merkle_package: Dict[str, Any],
-) -> None:
-    """Prepare both files before replacing either bounded final path."""
-    temp_paths: List[Path] = []
-    try:
-        temp_paths.append(_write_json_temp(ARTIFACT_PATHS[0], standard_package))
-        temp_paths.append(_write_json_temp(ARTIFACT_PATHS[1], merkle_package))
-        for temp_path, final_path in zip(temp_paths, ARTIFACT_PATHS):
-            os.replace(temp_path, final_path)
-    finally:
-        for temp_path in temp_paths:
-            temp_path.unlink(missing_ok=True)
+BUNDLE_PATH = Path("applied_evidence_bundle.json")
+WORKSPACE_NAME = ".tmp_workspace"
 
 
 def run_3_order_consistency_test() -> Tuple[Dict[str, Any], Dict[str, Any]]:
@@ -95,7 +61,7 @@ def run_3_order_consistency_test() -> Tuple[Dict[str, Any], Dict[str, Any]]:
         ).execute_lifecycle()
         payload = {
             "order_id": order_info["id"],
-            "test_scope": "3_order_local_fixture",
+            "test_scope": TEST_SCOPE,
             "lifecycle": lifecycle,
             "canonical_hash": compute_canonical_hash(lifecycle),
         }
@@ -112,8 +78,8 @@ def run_3_order_consistency_test() -> Tuple[Dict[str, Any], Dict[str, Any]]:
         )
 
     report = {
-        "schema_version": "1.0.0",
-        "test_scope": "3_order_local_fixture",
+        "schema_version": SCHEMA_VERSION,
+        "test_scope": TEST_SCOPE,
         "total_executed": len(standard_envelopes),
         "public_key_pem": signer.export_public_key_pem(),
         "execution_envelopes": standard_envelopes,
@@ -144,15 +110,92 @@ def run_3_order_consistency_test() -> Tuple[Dict[str, Any], Dict[str, Any]]:
     return standard_package, merkle_package
 
 
+def build_unified_bundle(
+    standard_package: Dict[str, Any],
+    merkle_package: Dict[str, Any],
+) -> Dict[str, Any]:
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "test_scope": TEST_SCOPE,
+        "bundle_type": BUNDLE_TYPE,
+        "standard_audit": standard_package,
+        "merkle_audit": merkle_package,
+        "parity_manifest": build_parity_manifest(
+            standard_package, merkle_package
+        ),
+    }
+
+
+def _clean_workspace(workspace: Path) -> None:
+    if workspace.is_symlink():
+        raise RuntimeError("Refusing to use a symlinked temporary workspace")
+    if workspace.exists():
+        if not workspace.is_dir():
+            raise RuntimeError("Temporary workspace path is not a directory")
+        shutil.rmtree(workspace)
+
+
+def _fsync_directory(directory: Path) -> None:
+    flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+    try:
+        descriptor = os.open(directory, flags)
+    except OSError:
+        return
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def write_verified_bundle(
+    bundle: Dict[str, Any], output_path: Path = BUNDLE_PATH
+) -> None:
+    """Verify in memory and on disk before one atomic final replacement."""
+    if not verify_unified_bundle(bundle):
+        raise RuntimeError("Unified bundle verification failed before writing")
+
+    output_path = Path(output_path)
+    output_directory = output_path.parent.resolve()
+    output_directory.mkdir(parents=True, exist_ok=True)
+    workspace = output_directory / WORKSPACE_NAME
+    _clean_workspace(workspace)
+    workspace.mkdir()
+    temporary_bundle = workspace / output_path.name
+
+    try:
+        with temporary_bundle.open(
+            "w", encoding="utf-8", newline="\n"
+        ) as file_handle:
+            json.dump(
+                bundle,
+                file_handle,
+                indent=2,
+                ensure_ascii=False,
+                allow_nan=False,
+            )
+            file_handle.write("\n")
+            file_handle.flush()
+            os.fsync(file_handle.fileno())
+
+        if not verify_audit_file(str(temporary_bundle)):
+            raise RuntimeError("Unified bundle verification failed on disk")
+
+        os.replace(temporary_bundle, output_path)
+        _fsync_directory(output_directory)
+    finally:
+        if workspace.exists() and not workspace.is_symlink():
+            shutil.rmtree(workspace)
+
+
 def main() -> None:
-    purge_stale_artifacts()
     standard_package, merkle_package = run_3_order_consistency_test()
     if not verify_standard_envelope_audit(standard_package):
         raise RuntimeError("Standard envelope verification failed")
     if not verify_merkle_batch_audit(merkle_package):
         raise RuntimeError("Merkle batch verification failed")
-    write_evidence_pair(standard_package, merkle_package)
-    print("ALL TESTS & PARITY CHECKS PASSED SUCCESSFULLY.")
+    bundle = build_unified_bundle(standard_package, merkle_package)
+    write_verified_bundle(bundle)
+    print("UNIFIED BUNDLE VERIFICATION PASSED")
 
 
 if __name__ == "__main__":

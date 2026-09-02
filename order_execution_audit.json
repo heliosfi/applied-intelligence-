@@ -1,0 +1,82 @@
+{
+  "report": {
+    "schema_version": "1.0.0",
+    "test_scope": "3_order_local_fixture",
+    "total_executed": 3,
+    "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuwwqqx1r1dSoKr+jv2TU\nnlj0j/PEM6LmXiO9RGrnkWZhVQ0bwvkd7EQ6Q8RiMFSEChcYoyJnmUN0rAlwzi3I\nhLEf6URlUKX3Nqy/aQFUG+k2nqS6cSmllpQiw3DWhQR5He4bIaDjhOLUZkoWQp1d\nozT4aWZ3XjRpKHSThVDXVNsclcbCAi/vDlWJN3jRAKvlo1in4JGWgTqMDEbfgi/1\n9Cjsd0ESpxe2V4rZvmOJPV0lBXtc7t3c3aTj4fxuOHtORFEtF9mDWU/sUhdE1pwC\nqsQXD7uNmxV5sHJeNY/i8dcY0e9uWH2RlvVtZKfO/L2mbQU7ipAE6zJHfPwxKkx6\nDwIDAQAB\n-----END PUBLIC KEY-----\n",
+    "execution_envelopes": [
+      {
+        "payload": {
+          "order_id": "ORD-001",
+          "test_scope": "3_order_local_fixture",
+          "lifecycle": {
+            "order_id": "ORD-001",
+            "symbol": "HELIOS-USD",
+            "quantity": "100",
+            "price": "150.00",
+            "final_state": "completed",
+            "state_history": [
+              "scheduled",
+              "dispatched",
+              "in_progress",
+              "completed"
+            ]
+          },
+          "canonical_hash": "7b918a53be5f2595ee24a86c625f4a2ae80bec1a71eb662ed39aa40cf37a8c7e"
+        },
+        "signatures": {
+          "rsa_pss_sha256": "IWEQMo2s/yjXeF06Zx2qwYSDcyh6sOA8dEDO0EibWa+qhwx96EVVbbfME8+445SrzXOMnwb0IKSv+9AnFYUhLv93Tgu8CB08H8eZ7qd+eDPmkDvyYMwj+EpU3Evd2A9NpVJ3IuK5FxK4i9jBmjkEcHW6zhf1PR8l80qKLlmEYWwo0qcwpAmNGNJ1vKjs90DbS5ZKT9FDuTV1fRKH0hwo1bvvCp6F4eIpRM73kIVtN5rVEY5doNAk4atB9JCAfLa2W2AcBcftvHbQrNJC0N5MIVA7c3sa7r+SHyT4FeoqXTZUyYwF00AAq03f6xSlYkgfV8qopkgryyq4PMwJTFqt1g=="
+        }
+      },
+      {
+        "payload": {
+          "order_id": "ORD-002",
+          "test_scope": "3_order_local_fixture",
+          "lifecycle": {
+            "order_id": "ORD-002",
+            "symbol": "SELENE-ETH",
+            "quantity": "10",
+            "price": "2800.00",
+            "final_state": "completed",
+            "state_history": [
+              "scheduled",
+              "dispatched",
+              "in_progress",
+              "completed"
+            ]
+          },
+          "canonical_hash": "76e832645795782649c38047439d9fa442f7c27f2f9ed01b5bacb7f5e04dfa23"
+        },
+        "signatures": {
+          "rsa_pss_sha256": "VC1a3OBCUmpx0Fmr2Vt486YzrHTDGE0A95Q/dVhFJQtCpzGXxBkgYnYd4UhkcmIr17146KZUR4JeGo5PpW0abCLhVTEdl0D+S+w5pghdQ9EJZf25rmoPbkMxAHtxP8dHSexGi6N6xgjeuR5+nquQ07dNjuLnbxD7t821Cyb7FaIQjhPz5NsRYEAXQ8Lu5fR8W9+6wIycMi8YWSnZHtat4mQyqrFoGU3VpqmVNBqvsv8rKDf0fGto1Xz7h37JYDHwU/PxyDambTM6BvJQjU0vqo4q4Uqka8fNDSo2F0umzc+nJLdyA0hg/E9MEORJI0sGdnhija49PRuBCVYEuT/5NQ=="
+        }
+      },
+      {
+        "payload": {
+          "order_id": "ORD-003",
+          "test_scope": "3_order_local_fixture",
+          "lifecycle": {
+            "order_id": "ORD-003",
+            "symbol": "AETHER-BTC",
+            "quantity": "1",
+            "price": "65000.00",
+            "final_state": "completed",
+            "state_history": [
+              "scheduled",
+              "dispatched",
+              "in_progress",
+              "completed"
+            ]
+          },
+          "canonical_hash": "89a29b0b960b8be7cc9464bfbff3befd7c5b59ca9a5af2effd7081be16f8758b"
+        },
+        "signatures": {
+          "rsa_pss_sha256": "mX5kb2gh6mdE5vWY6mdLLdmaOVSx2/5ElTzBCmsNAUdd9KyKzb0jEAxyisswi6V/hHmHjC7+Mgcg6JjHWFj/K2MnlZc9oECxyDUFy7mBPyFhyzjNIVgdjFHKXZJGvGONEi175ORY1bVRDoG9kbfJmzE++CnDbFx1Dzk7HDUb3mpir/uLZ+X1mH7hr6D8gw6XS/AEcyB70bp+36I6jdnwWaBSDak5y6JUJ25jgzzzByHJcSld0W3INTb/2nMfLqDNscWeUA+FD5xH9wZI3wmVH2TXbmC5RuFOLABGLy5WoUdeMaF9fWMe/DQdMFT4k73J8YPazz1ScM4XK6QFNzV3fw=="
+        }
+      }
+    ]
+  },
+  "container_signatures": {
+    "rsa_pss_sha256": "sczWhLqSN3h9i9IdwbJ2hnzA4iiHfkYJU3cNLJwNO+CBLslDogTViMNWOlxGeKGBKl6RZvw4S4ef1kbD+LArB/WP46Givaq6HTDa1VFR4B2D6pCKTqiRIHmd1P3Qp8lcuiN/iGXu2GRC2WT7iZe6yWhwyPICDU/CBHL+AAxLLdvJ7pof+/IZ4r9QqqJ/a+1AwIsmRXEWFNhzTNeb1dZhq2VkADyVxS/gd+Vngg/ioiDs3ujz63F8upOqmXbLFHMcbdxmjRHSPJgL2U0NFDsnMUFahYnxZbYa75xCDfK5IxrCUa5Xa02kOFXZGZbFUbLEIF13tOIfXK5ZO4yWTAJA1Q=="
+  }
+}

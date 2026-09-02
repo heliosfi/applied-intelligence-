@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0.0",
+  "test_scope": "3_order_local_fixture",
+  "batch_metadata": {
+    "total_items": 3,
+    "merkle_root": "27c88095e344621b8709a083fc3a3e97b7f3b81f3338fbaca087ba8e434eb02c",
+    "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuwwqqx1r1dSoKr+jv2TU\nnlj0j/PEM6LmXiO9RGrnkWZhVQ0bwvkd7EQ6Q8RiMFSEChcYoyJnmUN0rAlwzi3I\nhLEf6URlUKX3Nqy/aQFUG+k2nqS6cSmllpQiw3DWhQR5He4bIaDjhOLUZkoWQp1d\nozT4aWZ3XjRpKHSThVDXVNsclcbCAi/vDlWJN3jRAKvlo1in4JGWgTqMDEbfgi/1\n9Cjsd0ESpxe2V4rZvmOJPV0lBXtc7t3c3aTj4fxuOHtORFEtF9mDWU/sUhdE1pwC\nqsQXD7uNmxV5sHJeNY/i8dcY0e9uWH2RlvVtZKfO/L2mbQU7ipAE6zJHfPwxKkx6\nDwIDAQAB\n-----END PUBLIC KEY-----\n",
+    "batch_rsa_pss_signature": "IGKCZUOqMP+erDnw7s7qEIE+gnkzLFFAP1KSWdRTtgBEYBgjrk99hFQipcguIVPJ+5J3IXQu7IT5olsqRduwaQcjNCu/4hx6IheF4oECKK/6gx3/q+eJdusIuh2Ot5PlIgHGIWUKkTJfTa22xfiZb5ksDhbZHgSV8XWsANufTonGgp2M94TWESbcLegCrlRvAVBycO5ogUrKOebX0lY9Aa1b0sQPiY+PMFumvZYjZFIBGAvBj5j+7c9D8lr24B1HCgdNXCjN0l/Lqdvr370RBly2OkjE/sFYVEQlgCAqTKbC4X1euN87JJDGpMsO7bD5EEXCrWg38738k1A/QJBRRw=="
+  },
+  "envelopes": [
+    {
+      "leaf_index": 0,
+      "payload": {
+        "order_id": "ORD-001",
+        "test_scope": "3_order_local_fixture",
+        "lifecycle": {
+          "order_id": "ORD-001",
+          "symbol": "HELIOS-USD",
+          "quantity": "100",
+          "price": "150.00",
+          "final_state": "completed",
+          "state_history": [
+            "scheduled",
+            "dispatched",
+            "in_progress",
+            "completed"
+          ]
+        },
+        "canonical_hash": "7b918a53be5f2595ee24a86c625f4a2ae80bec1a71eb662ed39aa40cf37a8c7e"
+      },
+      "leaf_hash": "511c089f14c1f51f548ba881ea98f234562a6ad642c8a13f5c07fa6995a4eb49",
+      "merkle_proof": [
+        {
+          "position": "right",
+          "hash": "3ff8c9680271def9d81b7d663093dbcc798a69995ae0c913ba0ea96da4cd3697"
+        },
+        {
+          "position": "right",
+          "hash": "5314f5aa14140b50f46c7cedd86269b96da66ac5385f0df44407c032dfdd9ae4"
+        }
+      ]
+    },
+    {
+      "leaf_index": 1,
+      "payload": {
+        "order_id": "ORD-002",
+        "test_scope": "3_order_local_fixture",
+        "lifecycle": {
+          "order_id": "ORD-002",
+          "symbol": "SELENE-ETH",
+          "quantity": "10",
+          "price": "2800.00",
+          "final_state": "completed",
+          "state_history": [
+            "scheduled",
+            "dispatched",
+            "in_progress",
+            "completed"
+          ]
+        },
+        "canonical_hash": "76e832645795782649c38047439d9fa442f7c27f2f9ed01b5bacb7f5e04dfa23"
+      },
+      "leaf_hash": "3ff8c9680271def9d81b7d663093dbcc798a69995ae0c913ba0ea96da4cd3697",
+      "merkle_proof": [
+        {
+          "position": "left",
+          "hash": "511c089f14c1f51f548ba881ea98f234562a6ad642c8a13f5c07fa6995a4eb49"
+        },
+        {
+          "position": "right",
+          "hash": "5314f5aa14140b50f46c7cedd86269b96da66ac5385f0df44407c032dfdd9ae4"
+        }
+      ]
+    },
+    {
+      "leaf_index": 2,
+      "payload": {
+        "order_id": "ORD-003",
+        "test_scope": "3_order_local_fixture",
+        "lifecycle": {
+          "order_id": "ORD-003",
+          "symbol": "AETHER-BTC",
+          "quantity": "1",
+          "price": "65000.00",
+          "final_state": "completed",
+          "state_history": [
+            "scheduled",
+            "dispatched",
+            "in_progress",
+            "completed"
+          ]
+        },
+        "canonical_hash": "89a29b0b960b8be7cc9464bfbff3befd7c5b59ca9a5af2effd7081be16f8758b"
+      },
+      "leaf_hash": "d1faafd6fa47fe0c8915e23fbe0d85ab31525a3d84b02e1f46d43a21b74ed809",
+      "merkle_proof": [
+        {
+          "position": "right",
+          "hash": "d1faafd6fa47fe0c8915e23fbe0d85ab31525a3d84b02e1f46d43a21b74ed809"
+        },
+        {
+          "position": "left",
+          "hash": "a18511b179242f7e3713046f1731e01adb76d9fd2e2457c5d10788c89f07383b"
+        }
+      ]
+    }
+  ]
+}

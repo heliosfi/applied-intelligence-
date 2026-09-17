@@ -8,10 +8,10 @@ from signed_audit_suite import (
     OrderStateMachine,
     canonical_json_bytes,
 )
-from test_3_order_consistency import (
+from multi_order_consistency import (
     WORKSPACE_NAME,
     build_unified_bundle,
-    run_3_order_consistency_test,
+    run_multi_order_consistency_test,
     write_verified_bundle,
 )
 from verify_audit_log import (
@@ -26,7 +26,7 @@ from verify_audit_log import (
 class AppliedEvidenceTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.standard, cls.merkle = run_3_order_consistency_test()
+        cls.standard, cls.merkle = run_multi_order_consistency_test()
         cls.bundle = build_unified_bundle(cls.standard, cls.merkle)
 
     def test_illegal_state_transition_is_rejected(self) -> None:
@@ -53,7 +53,7 @@ class AppliedEvidenceTests(unittest.TestCase):
             OrderStateMachine("ORD-ERR", "HELIOS-USD", 10, "100.00")
 
     def test_tampered_rsa_payload_is_rejected(self) -> None:
-        signer = CryptographicSigner()
+        signer = CryptographicSigner(allow_ephemeral_keys=True)
         signature = signer.sign_rsa(b"authentic_payload")
         self.assertFalse(
             verify_rsa_signature(
@@ -62,7 +62,7 @@ class AppliedEvidenceTests(unittest.TestCase):
         )
 
     def test_tampered_hmac_payload_is_rejected(self) -> None:
-        signer = CryptographicSigner(hmac_secret_key=b"x" * 32)
+        signer = CryptographicSigner(hmac_secret_key=b"x" * 32, allow_ephemeral_keys=True)
         signature = signer.sign_hmac(b"authentic_payload")
         self.assertTrue(signer.verify_hmac(b"authentic_payload", signature))
         self.assertFalse(signer.verify_hmac(b"tampered_payload", signature))
@@ -84,7 +84,7 @@ class AppliedEvidenceTests(unittest.TestCase):
         self.assertFalse(verify_merkle_batch_audit(tampered))
 
     def test_false_canonical_hash_is_rejected_even_when_signed(self) -> None:
-        signer = CryptographicSigner()
+        signer = CryptographicSigner(allow_ephemeral_keys=True)
         envelopes = []
         for index in range(3):
             lifecycle = OrderStateMachine(
@@ -132,7 +132,7 @@ class AppliedEvidenceTests(unittest.TestCase):
     def test_mixed_key_bundle_is_rejected_and_canonical_file_preserved(
         self,
     ) -> None:
-        _, second_merkle = run_3_order_consistency_test()
+        _, second_merkle = run_multi_order_consistency_test()
         mixed_bundle = build_unified_bundle(self.standard, second_merkle)
         self.assertFalse(verify_unified_bundle(mixed_bundle))
 

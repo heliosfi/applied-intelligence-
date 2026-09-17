@@ -1,3 +1,11 @@
+"""Multi-order parity fixture.
+
+Generates and verifies the 3-order (three test orders: HELIOS-USD, SELENE-ETH,
+AETHER-BTC) evidence bundle. The "3 order" in this module's history refers to
+the three test orders exercised for multi-symbol parity — it is NOT the
+Adumetric three-order governance framework (Alignment assessment /
+Inconsistency detection and bounded repair / Consistency verification).
+"""
 import json
 import os
 import shutil
@@ -27,8 +35,8 @@ BUNDLE_PATH = Path("applied_evidence_bundle.json")
 WORKSPACE_NAME = ".tmp_workspace"
 
 
-def run_3_order_consistency_test() -> Tuple[Dict[str, Any], Dict[str, Any]]:
-    signer = CryptographicSigner()
+def run_multi_order_consistency_test() -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    signer = CryptographicSigner(allow_ephemeral_keys=True)
     orders_data = [
         {
             "id": "ORD-001",
@@ -188,7 +196,7 @@ def write_verified_bundle(
 
 
 def main() -> None:
-    standard_package, merkle_package = run_3_order_consistency_test()
+    standard_package, merkle_package = run_multi_order_consistency_test()
     if not verify_standard_envelope_audit(standard_package):
         raise RuntimeError("Standard envelope verification failed")
     if not verify_merkle_batch_audit(merkle_package):

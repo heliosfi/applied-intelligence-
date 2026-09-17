@@ -89,7 +89,17 @@ class CryptographicSigner:
         self,
         private_key_pem: Optional[str] = None,
         hmac_secret_key: Optional[bytes] = None,
+        allow_ephemeral_keys: bool = False,
     ) -> None:
+        # Fail closed: ephemeral key generation is permitted only under an
+        # explicit development/test allowance. Production execution must not
+        # silently mint signing identity when material is missing.
+        if private_key_pem is None and not allow_ephemeral_keys:
+            raise ValueError(
+                "No RSA signing material provided: pass private_key_pem or "
+                "set allow_ephemeral_keys=True for explicit development/test "
+                "use. Refusing to generate ephemeral production keys."
+            )
         if private_key_pem is None:
             private_key = rsa.generate_private_key(
                 public_exponent=65537, key_size=2048

@@ -54,7 +54,7 @@ Cryptographic signatures support integrity and origin verification when keys are
 The reported `OrderStateMachine` permits only sequential progression:
 
 ```text
-scheduled → dispatched → in-progress → completed
+scheduled → dispatched → in_progress → completed
 ```
 
 Illegal or out-of-order transitions are rejected using HTTP 409-style conflict semantics.
@@ -108,7 +108,7 @@ The reported signer loads:
 
 from environment or vault-backed variables.
 
-Any runtime-generated ephemeral fallback should be restricted to explicit development or test mode. Production execution should fail closed when required signing material is missing, malformed, or unauthorized.
+Any runtime-generated ephemeral fallback should be restricted to explicit development or test mode. Production execution should fail closed when required signing material is missing, malformed, or unauthorized. Enforced: `CryptographicSigner` raises unless `private_key_pem` is supplied or `allow_ephemeral_keys=True` is set explicitly.
 
 #### Key-generation utility
 

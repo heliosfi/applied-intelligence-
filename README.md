@@ -83,13 +83,17 @@ The supplied development record reports 100% SHA-256 payload-hash agreement acro
 
 #### Signed audit CI
 
-The committed `.github/workflows/signed-audit-ci.yml` workflow runs on push
-and pull requests:
+The `.github/workflows/signed-audit-ci.yml` workflow is prepared and its
+steps are validated locally:
 
 - byte-compilation of all Python sources;
 - the unit and negative-path test suite;
 - independent verification of the three committed evidence JSONs via
   `verify_audit_log.verify_audit_file`.
+
+It is not yet committed: the automation credential in use lacks the
+`workflow` scope required to write under `.github/`. Committing that single
+file completes the CI lane.
 
 Benchmark execution, regression-threshold enforcement, and Linear defect
 routing remain documented but HOLD and are not wired into CI.

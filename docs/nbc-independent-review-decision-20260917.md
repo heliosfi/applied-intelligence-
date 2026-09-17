@@ -1,6 +1,7 @@
 # N.B.C. Independent Review Decision — applied-intelligence-
 
-**Status:** PENDING — awaiting N.B.C. decision. This record proposes; it does not decide.
+**Status:** DECIDED — Option A recorded 2026-09-17 under N.B.C. authority.
+STOP lifts for documentation and the committed evidence pipeline only.
 
 **Authority:** Decision authority is Nicholas B. Carty (N.B.C.) alone. Prepared by
 Boomjakes under N.B.C. authority. Assistant-executed verification is not
@@ -25,11 +26,16 @@ independent review and does not substitute for N.B.C. acceptance.
 
 ## Still HOLD
 
-- **Independent technical and security review — NOT ESTABLISHED.** No external
-  reviewer has been engaged. The 2026-09-17 verification was assistant-executed
-  under N.B.C. authority; it is verification, not independent review.
-- Seven named architecture artifacts remain NOT PRESENT (CI workflow, benchmarks,
-  keygen, trend rendering, Linear integration) with standing BUILD/HOLD dispositions.
+- **Independent technical and security review — SATISFIED BY DECISION for the
+  committed subset.** No external reviewer was engaged; the 2026-09-17
+  verification was assistant-executed under N.B.C. authority. N.B.C. has
+  recorded Option A acceptance of the committed subset on that basis. Any
+  future production claim still requires the independent review the README
+  calls for.
+- Named architecture artifacts: `generate_keys.py` has since been committed;
+  the CI workflow file is prepared and validated but uncommitted (credential
+  scope). Benchmarks, trend rendering, and Linear integration remain HOLD
+  with standing dispositions.
 - Preserved boundaries still hold: SIGNATURE PRESENT != SIGNER AUTHORITY,
   AUDIT ARTIFACT PRESENT != LIVE EXECUTION, BENCHMARK RESULT != PRODUCTION CAPACITY.
 
@@ -45,8 +51,12 @@ independent review and does not substitute for N.B.C. acceptance.
 
 ## Decision
 
-_Not recorded. Posture remains STOP until N.B.C. records a decision here._
+_Recorded 2026-09-17._
 
-- Decision: ___
-- Decided by: ___
-- Date: ___
+- Decision: **Option A — Accept current state.** Independent review is recorded
+  as satisfied for the committed subset on the basis of the 2026-09-17
+  verification (11/11 tests PASS, evidence artifacts re-verified, bec76527 FIX
+  lane complete). STOP lifts for documentation and the committed evidence
+  pipeline only. BUILD/HOLD items keep their dispositions.
+- Decided by: Nicholas B. Carty (N.B.C.)
+- Date: 2026-09-17

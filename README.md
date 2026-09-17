@@ -83,13 +83,16 @@ The supplied development record reports 100% SHA-256 payload-hash agreement acro
 
 #### Signed audit CI
 
-The proposed `.github/workflows/signed-audit-ci.yml` workflow combines:
+The committed `.github/workflows/signed-audit-ci.yml` workflow runs on push
+and pull requests:
 
-- GPG/SSH commit-signature validation;
-- audit-envelope verification;
-- benchmark execution;
-- regression-threshold enforcement; and
-- bounded Linear defect routing when credentials and authority are present.
+- byte-compilation of all Python sources;
+- the unit and negative-path test suite;
+- independent verification of the three committed evidence JSONs via
+  `verify_audit_log.verify_audit_file`.
+
+Benchmark execution, regression-threshold enforcement, and Linear defect
+routing remain documented but HOLD and are not wired into CI.
 
 Repository rulesets or branch protection remain necessary if signature checks are intended to block unverified changes rather than merely report them.
 
@@ -112,7 +115,7 @@ Any runtime-generated ephemeral fallback should be restricted to explicit develo
 
 #### Key-generation utility
 
-The reported `generate_keys.py` creates 2048-bit RSA key pairs formatted for controlled injection into GitHub Secrets or a secrets manager such as HashiCorp Vault.
+The committed `generate_keys.py` creates 2048-bit RSA key pairs formatted for controlled injection into GitHub Secrets or a secrets manager such as HashiCorp Vault.
 
 Generated private keys must never be committed, logged, placed in build artifacts, or exposed in CI output.
 
